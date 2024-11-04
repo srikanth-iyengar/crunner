@@ -1,0 +1,27 @@
+cmd c1("yarn dev") {
+  filter("{regex}");
+  filter("{regex}");
+
+  checkpoint ch1("curl http://localhost:8080");
+
+  watch("file1", "file2", "file3");
+}
+
+cmd c2("node index.js") {
+  filter("{regex}");
+
+  watch("file1", "file2", "file3");
+
+  depends_on(c1.ch1);
+}
+
+cmd c3("cmatrix") {
+  filter("{regex}");
+
+  watch("file1", "file2", "file3");
+}
+
+
+cmd c("node") { filter("asdf"); }
+
+
