@@ -21,7 +21,10 @@ bison_target(PARSER "${SRC_DIR}/lib/rn.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER
 
 add_flex_bison_dependency(LEXER PARSER)
 
-add_executable(main "src/main.c" "${LEXER_OUT}" "${PARSER_OUT}")
+
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.c")
+
+add_executable(main "${LEXER_OUT}" "${PARSER_OUT}" ${SOURCES})
 
 target_include_directories(main PUBLIC "${PARSER_DIR}" "${INCLUDE_DIR}")
 target_link_libraries(main PUBLIC ${CURSES_LIBRARIES})

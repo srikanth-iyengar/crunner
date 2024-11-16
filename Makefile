@@ -1,24 +1,26 @@
 .PHONY: compile
 
 SHELL := /bin/bash
-CMAKE_PRESENT=$(shell hash cmake 2>&1 1>/dev/null || echo $?)
-CC_PRESENT=$(shell hash cc 2>&1 1> /dev/null || echo $?)
+CMAKE_PRESENT=$(shell (hash cmake 2>/dev/null 1>/dev/null && echo "YES") || echo "NO")
+CC_PRESENT=$(shell (hash cc 2>/dev/null 1> /dev/null && echo "YES") || echo "NO")
 
 compile: checks
 	@echo "----------------Creating build directory----------------"
 	@rm -rf build
-	@mkdir build -p
+	@mkdir build
 	@echo "-------------------Building C-Runner--------------------"
-	@cmake -S . -B build
+	@cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 	@cd build && make
+	@echo "--------Adding symlink for compile_commands.json--------"
+	@ln -sf ./build/compile_commands.json ./compile_commands.json
 
 .check-cmake-present:
-	@echo ${CMAKE_PRESENT}
+	@echo "IS CMAKE PRESENT: ${CMAKE_PRESENT}"
 
 .check-cc-present:
-	@
+	@echo "CC ISPRESENT: ${CC_PRESENT}"
 
-checks: .check-cmake-present .check-cmake-present
+checks: .check-cmake-present .check-cc-present
 
 clean:
 	@rm -rf build

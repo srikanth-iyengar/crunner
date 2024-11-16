@@ -1,8 +1,12 @@
 %{
+#include <stdlib.h>
+#include <parser_types.h>
+#include <lib.h>
 
 extern int yylex();
 extern int yyparse(config *cfg);
 void yyerror(config* cfg, const char *s);
+void add_cmd_prop(config* cfg, cmd_prop prop);
 
 %}
 
@@ -17,7 +21,12 @@ void yyerror(config* cfg, const char *s);
 %union {
   int ival;
   float fval;
-  char *sval;
+  char* sval;
+  filter* f;
+  watch* w;
+  checkpoint* chkpt;
+  command cmd;
+  cmd_prop prop;
 }
 
 %token CMD
@@ -33,37 +42,74 @@ void yyerror(config* cfg, const char *s);
 %token <ival> TIMEOUT
 %token <sval> STRING
 
+%type<f> filter
+%type<w> watch
+%type<cmd> command
+%type<chkpt> checkpoint
+%type<prop> cmd_prop
+
 %parse-param {config *cfg}
 
 %start commands
 
 %%
 
-commands: command
-        | commands command
+commands: command {
+					add_cmd(&*cfg);
+				}
+        | commands command {
+					add_cmd(&*cfg);
+				}
         ;
 
-command: CMD IDENT LPAR STRING RPAR LCURLY cmd_props RCURLY {}
-       ;
+command: CMD IDENT LPAR STRING RPAR LCURLY cmd_props RCURLY {
+				command* cmd = get_last_cmd(&*cfg);
+				cmd->cmd = $2;
+			}
+			;
 
-cmd_props: cmd_props cmd_prop{}
-         | cmd_prop {}
-         ;
+cmd_props: cmd_props cmd_prop {
+					add_cmd_prop(&*cfg, $2);
+				 }
+				 | cmd_prop {
+					add_cmd_prop(&*cfg, $1);
+				 }
+				 ;
 
-cmd_prop: filter {}
-        | checkpoint {}
-        | watch{}
-        ;
+cmd_prop: filter {
+					cmd_prop prop;
+					prop.value.filter = $1;
+					prop.type = PROP_FILTER; 
+					$$ = prop;
+				}
+				| checkpoint {
+					cmd_prop prop;
+					prop.type = PROP_CHECKPOINT;
+					prop.value.chkpt = $1;
+					$$ = prop;
+				}
+				| watch{
+						cmd_prop prop;
+						prop.value.watch = $1;
+						prop.type = PROP_WATCH;
+						$$ = prop;
+					}
+					;
 
 filter: FILTER LPAR STRING RPAR SEMICOLON {
-      }
-      ;
+			$$ = $3;
+			}
+			;
 
-checkpoint: CHECKPOINT IDENT LPAR STRING RPAR SEMICOLON {}
-          ;
+checkpoint: CHECKPOINT IDENT LPAR STRING RPAR SEMICOLON {
+						$$ = create_checkpoint($2, $4);
+						}
+						;
 
-watch: WATCH LPAR STRING RPAR SEMICOLON {}
-     ;
+watch: WATCH LPAR STRING RPAR SEMICOLON {
+		 $$ = create_watch($3);
+		 }
+		 ;
 
 %%
 
