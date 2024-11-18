@@ -6,7 +6,6 @@
 void trim_quotes(char *s);
 void set_input_string(const char* in);
 void end_lexical_scan(void);
-config parse_cfg(const char* in);
 
 %}
 
@@ -50,12 +49,4 @@ void set_input_string(const char* in) {
 
 void end_lexical_scan(void) {
 	yy_delete_buffer(YY_CURRENT_BUFFER);
-}
-
-config parse_cfg(const char* in) {
-	config cfg;
-	set_input_string(in);
-	int rv = yyparse(&cfg);
-	end_lexical_scan();
-	return cfg;
 }

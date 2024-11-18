@@ -5,14 +5,15 @@ typedef struct checkpoint {
 	char* value;
 	char* ident;
 } checkpoint;
-typedef char filter;
-typedef char watch;
+typedef char* filter;
+typedef char* watch;
 
 typedef struct command {
 	char* cmd;
-	watch** watch_paths;
+	char* ident;
+	watch* watch_paths;
 	checkpoint** checkpoints;
-	filter** filters;
+	filter* filters;
 
 	int cnt_watch;
 	int cnt_checkpoint;
@@ -24,15 +25,15 @@ typedef struct config {
 	int size;
 } config;
 
+enum prop_type { PROP_FILTER, PROP_CHECKPOINT, PROP_WATCH };
+
 typedef struct cmd_prop {
-	enum { PROP_FILTER, PROP_CHECKPOINT, PROP_WATCH } type;
+	enum prop_type type;
 	union {
 		checkpoint* chkpt;
-		filter* filter;
-		watch* watch;
+		filter filter;
+		watch watch;
 	} value;
 } cmd_prop;
-
-
 
 #endif

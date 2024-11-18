@@ -1,0 +1,6 @@
+cmd c1("yarn dev") {
+  filter("{regex}1");
+  filter("{regex}2");
+  filter("{regex}3");
+  filter("{regex}4");
+}

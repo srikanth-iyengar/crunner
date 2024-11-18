@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.28)
 
 project(c-runner VERSION 1.0 LANGUAGES C)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto -fsanitize=address")
+
 set(PARSER_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 set(SRC_DIR "src")
 set(INCLUDE_DIR "include")

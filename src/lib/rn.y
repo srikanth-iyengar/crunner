@@ -1,32 +1,36 @@
 %{
-#include <stdlib.h>
-#include <parser_types.h>
-#include <lib.h>
 
 extern int yylex();
 extern int yyparse(config *cfg);
 void yyerror(config* cfg, const char *s);
-void add_cmd_prop(config* cfg, cmd_prop prop);
 
 %}
 
 %code top {
-#include "parser_types.h"
+#include <stdlib.h>
+#include <parser_types.h>
+#include <lib.h>
+#include <logger.h>
+#include <string.h>
 }
 
 %code requires {
-#include "parser_types.h"
+#include <stdlib.h>
+#include <parser_types.h>
+#include <lib.h>
+#include <logger.h>
+#include <string.h>
 }
 
 %union {
   int ival;
   float fval;
   char* sval;
-  filter* f;
-  watch* w;
+  filter f;
+  watch w;
   checkpoint* chkpt;
   command cmd;
-  cmd_prop prop;
+  cmd_prop* prop;
 }
 
 %token CMD
@@ -44,7 +48,6 @@ void add_cmd_prop(config* cfg, cmd_prop prop);
 
 %type<f> filter
 %type<w> watch
-%type<cmd> command
 %type<chkpt> checkpoint
 %type<prop> cmd_prop
 
@@ -55,56 +58,50 @@ void add_cmd_prop(config* cfg, cmd_prop prop);
 %%
 
 commands: command {
-					add_cmd(&*cfg);
+					add_cmd(cfg);
 				}
         | commands command {
-					add_cmd(&*cfg);
+					add_cmd(cfg);
 				}
         ;
 
 command: CMD IDENT LPAR STRING RPAR LCURLY cmd_props RCURLY {
-				command* cmd = get_last_cmd(&*cfg);
-				cmd->cmd = $2;
+				command* cmd = get_last_cmd(cfg);
+				cmd->cmd = $4;
+				cmd->ident = $2;
 			}
 			;
 
-cmd_props: cmd_props cmd_prop {
-					add_cmd_prop(&*cfg, $2);
-				 }
-				 | cmd_prop {
-					add_cmd_prop(&*cfg, $1);
-				 }
+cmd_props: cmd_props cmd_prop | cmd_prop
 				 ;
 
 cmd_prop: filter {
-					cmd_prop prop;
-					prop.value.filter = $1;
-					prop.type = PROP_FILTER; 
-					$$ = prop;
+				cmd_prop* prop = create_cmd_prop($1, PROP_FILTER);
+				add_cmd_prop(cfg, prop);
+				$$ = prop;
 				}
 				| checkpoint {
-					cmd_prop prop;
-					prop.type = PROP_CHECKPOINT;
-					prop.value.chkpt = $1;
-					$$ = prop;
+				cmd_prop* prop = create_cmd_prop($1, PROP_CHECKPOINT);
+				add_cmd_prop(cfg, prop);
+				$$ = prop;
 				}
 				| watch{
-						cmd_prop prop;
-						prop.value.watch = $1;
-						prop.type = PROP_WATCH;
-						$$ = prop;
-					}
-					;
+				cmd_prop* prop = create_cmd_prop($1, PROP_WATCH);
+				add_cmd_prop(cfg, prop);
+				$$ = prop;
+				}
+				;
 
 filter: FILTER LPAR STRING RPAR SEMICOLON {
-			$$ = $3;
+			LOG_DEBUG("REGEX: %s", $3);
+			$$ = create_filter($3);
 			}
 			;
 
 checkpoint: CHECKPOINT IDENT LPAR STRING RPAR SEMICOLON {
-						$$ = create_checkpoint($2, $4);
-						}
-						;
+					$$ = create_checkpoint($2, $4);
+					}
+					;
 
 watch: WATCH LPAR STRING RPAR SEMICOLON {
 		 $$ = create_watch($3);
@@ -114,4 +111,5 @@ watch: WATCH LPAR STRING RPAR SEMICOLON {
 %%
 
 void yyerror(config* cfg, const char* s) {
+	log(LogLevel_ERROR, "error occured while parsing: %s", s);
 }

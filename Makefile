@@ -1,4 +1,4 @@
-.PHONY: compile
+.PHONY: compile run checks debug compile
 
 SHELL := /bin/bash
 CMAKE_PRESENT=$(shell (hash cmake 2>/dev/null 1>/dev/null && echo "YES") || echo "NO")
@@ -21,6 +21,13 @@ compile: checks
 	@echo "CC ISPRESENT: ${CC_PRESENT}"
 
 checks: .check-cmake-present .check-cc-present
+
+debug:
+	@CMAKE_BUILD_TYPE=Debug make
+	@gdb -tui ./build/main
+
+run: compile
+	@./build/main
 
 clean:
 	@rm -rf build
