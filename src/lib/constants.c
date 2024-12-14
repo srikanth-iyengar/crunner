@@ -1,5 +1,5 @@
 /**
- * main.c
+ * constants.c
  *
  * Copyright (C) 2024 Srikanth Iyengar <ksrikanth3012@gmail.com>
  *
@@ -17,21 +17,3 @@
  * Public License along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
-#include "constants.h"
-#include "lib.h"
-#include "logger.h"
-#include "parser_types.h"
-#include "curses_utils.h"
-
-int main()
-{
-// initialize logger
-	FILE *log_file = fopen(CRUNNER_HOME, "w+");
-
-	logger_initConsoleLogger(log_file);
-	init_ncurses();
-
-	config *cfg = get_cfg();
-
-	return 0;
-}

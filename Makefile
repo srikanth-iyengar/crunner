@@ -3,6 +3,8 @@
 SHELL := /bin/bash
 CMAKE_PRESENT=$(shell (hash cmake 2>/dev/null 1>/dev/null && echo "YES") || echo "NO")
 CC_PRESENT=$(shell (hash cc 2>/dev/null 1> /dev/null && echo "YES") || echo "NO")
+RULES = -linux
+SOURCE_FILES=$(shell (find ./src -name '*.c'))
 
 compile: checks
 	@echo "----------------Creating build directory----------------"
@@ -31,3 +33,6 @@ run: compile
 
 clean:
 	@rm -rf build
+
+fmt:
+	@indent ${RULES} ${SOURCE_FILES}

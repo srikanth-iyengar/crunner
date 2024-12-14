@@ -23,14 +23,14 @@ void yyerror(config* cfg, const char *s);
 }
 
 %union {
-  int ival;
-  float fval;
-  char* sval;
-  filter f;
-  watch w;
-  checkpoint* chkpt;
-  command cmd;
-  cmd_prop* prop;
+	int ival;
+	float fval;
+	char* sval;
+	filter f;
+	watch w;
+	checkpoint* chkpt;
+	command cmd;
+	cmd_prop* prop;
 }
 
 %token CMD
@@ -60,10 +60,10 @@ void yyerror(config* cfg, const char *s);
 commands: command {
 					add_cmd(cfg);
 				}
-        | commands command {
+				| commands command {
 					add_cmd(cfg);
 				}
-        ;
+				;
 
 command: CMD IDENT LPAR STRING RPAR LCURLY cmd_props RCURLY {
 				command* cmd = get_last_cmd(cfg);
