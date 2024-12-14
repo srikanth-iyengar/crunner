@@ -34,13 +34,15 @@ watch							{ return WATCH; }
 %%
 
 void trim_quotes(char *s) {
-	char* ptr = s;
-	while(*ptr != '\0') {
-		*(ptr-1) = *ptr;
+	if (s == NULL || strlen(s) < 2) {
+		return; // Nothing to trim or invalid input
+	}
+	char *ptr = s;
+	while (*(ptr + 1) != '\0') {
+		*ptr = *(ptr + 1); // Shift characters to the left
 		ptr++;
 	}
-	ptr -= 2;
-	*ptr = '\0';
+	*(ptr - 1) = '\0'; // Null-terminate the string after trimming
 }
 
 void set_input_string(const char* in) {

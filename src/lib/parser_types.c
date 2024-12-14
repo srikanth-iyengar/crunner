@@ -24,6 +24,8 @@ void add_cmd(config *cfg) {
 config* create_cfg() {
 	config* cfg = malloc(sizeof(config));
 	command* cmd = create_command();
+	cfg->size = 0;
+	cfg->commands = NULL;
 
 	add_cmd(cfg);
 
@@ -88,15 +90,13 @@ void add_checkpoint(command* cmd, checkpoint* chkpt) {
 	cmd->checkpoints[cmd->cnt_checkpoint - 1] = chkpt;
 }
 
-/*
+/**
  * This function takes a config and a command_prop and appends the prop to the last command present in the config
  * @cfg  config* is the reference to the config
  * @prop cmd_prop is the actual cmd_prop struct
-*/
+ */
 void add_cmd_prop(config* cfg, cmd_prop* prop) {
 	command* cmd = get_last_cmd(cfg);
-	LOG_INFO("add_cmd_prop: %s", prop->value.filter);
-	LOG_INFO("cmd ptr: %p", cmd->filters);
 	switch(prop->type) {
 		case PROP_WATCH:
 			add_watch(cmd, prop->value.watch);
