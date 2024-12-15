@@ -1,5 +1,5 @@
 /**
- * constants.h
+ * init.c
  *
  * Copyright (C) 2024 Srikanth Iyengar <ksrikanth3012@gmail.com>
  *
@@ -16,12 +16,40 @@
  * Public License along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
-#ifndef CURNNER_CONSTANTS
+#include "ncurses.h"
+#include "constants.h"
+#include "logger.h"
+#include <bits/pthreadtypes.h>
+#include <event2/event_compat.h>
+#include <event2/event.h>
+#include <pthread.h>
 
-#define MAX_LOG_LIMIT 100 * 1024 * 1024
+void init_ncurses()
+{
+	initscr();
+	raw();
+	keypad(stdscr, TRUE);
+	noecho();
+}
 
-const char* CRUNNER_HOME = "$HOME/.local/share/crunner/";
+void init_logger()
+{
+	char *log_path = get_data_path("main.log");
+	printf("%s", log_path);
+	logger_initFileLogger(log_path, MAX_LOG_LIMIT, 10);
+}
 
-char *get_data_path(char *path);
+void *init_event_loop(void *args)
+{
+	event_init();
+	event_loop(EVLOOP_NO_EXIT_ON_EMPTY);
 
-#endif // !CURNNER_CONSTANTS
+	return 0;
+}
+
+void init()
+{
+	init_logger();
+
+	initscr();
+}

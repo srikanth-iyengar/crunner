@@ -16,3 +16,16 @@
  * Public License along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
+
+#include <stdlib.h>
+#include <string.h>
+
+char *get_data_path(char *path)
+{
+	char *home = getenv("HOME");
+	char *app_data = "/.local/share/crunner/";
+	strcat(home, app_data);
+	strcat(home, path);
+
+	return home;
+}

@@ -1,5 +1,5 @@
 /**
- * constants.h
+ * main.c
  *
  * Copyright (C) 2024 Srikanth Iyengar <ksrikanth3012@gmail.com>
  *
@@ -16,12 +16,11 @@
  * Public License along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
-#ifndef CURNNER_CONSTANTS
+#include "init.h"
 
-#define MAX_LOG_LIMIT 100 * 1024 * 1024
+int main(int argc, char **argv)
+{
+	init();
 
-const char* CRUNNER_HOME = "$HOME/.local/share/crunner/";
-
-char *get_data_path(char *path);
-
-#endif // !CURNNER_CONSTANTS
+	return 0;
+}

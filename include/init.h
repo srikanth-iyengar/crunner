@@ -1,5 +1,5 @@
 /**
- * main.c
+ * init.h
  *
  * Copyright (C) 2024 Srikanth Iyengar <ksrikanth3012@gmail.com>
  *
@@ -16,23 +16,8 @@
  * Public License along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
-#include "constants.h"
-#include "lib.h"
-#include "logger.h"
-#include "parser_types.h"
-#include "curses_utils.h"
-#include <string.h>
+#ifndef CRUNNER_INIT_H
 
-int main()
-{
-	// initialize logger
-	char *logpath = strcat("main.log", CRUNNER_HOME);
-	FILE *log_file = fopen(logpath, "w+");
-	logger_initConsoleLogger(log_file);
+void init();
 
-	init_ncurses();
-
-	config *cfg = get_cfg();
-
-	return 0;
-}
+#endif // !CRUNNER_INIT_H

@@ -18,11 +18,11 @@
  */
 
 #include "logger.h"
+#include "stdio.h"
 #include <assert.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <time.h>
-#include "stdio.h"
 #include <pthread.h>
 #include <sys/time.h>
 #include <sys/syscall.h>
