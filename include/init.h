@@ -17,7 +17,13 @@
  * <https://www.gnu.org/licenses/>.
  */
 #ifndef CRUNNER_INIT_H
+#define CRUNNER_INIT_H
 
 void init();
+void init_logger();
+void init_parser();
+void init_config();
+void init_ncurses();
+void init_event_loop();
 
 #endif // !CRUNNER_INIT_H

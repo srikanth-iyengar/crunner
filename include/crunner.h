@@ -1,4 +1,5 @@
 #ifndef CRUNNER_H
+#define CRUNNER_H
 
 enum proc_status {
 	RUNNING,

@@ -1,7 +1,7 @@
 /**
- * event_types.c
+ * init.c
  *
- * Copyright (C) 2024 Srikanth Iyengar <ksrikanth3012@gmail.com>
+ * Copyright (C) 2024 Srikanth Iyengar <git@srikanthk.in>
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,3 +16,13 @@
  * Public License along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
+
+#include <ncurses.h>
+
+void init_ncurses()
+{
+	initscr();
+	raw();
+	keypad(stdscr, TRUE);
+	noecho();
+}

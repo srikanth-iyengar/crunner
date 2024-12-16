@@ -14,6 +14,6 @@ void add_filter(command* cmd, filter f);
 void add_checkpopint(command* cmd, checkpoint* chkpt);
 void add_cmd_prop(config* cfg, cmd_prop* prop);
 void add_cmd(config* cfg);
-config* get_cfg();
+config* get_config();
 
 #endif // !C_RUNNER_LIB_HH

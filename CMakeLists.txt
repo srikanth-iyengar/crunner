@@ -22,8 +22,8 @@ include_directories(${CURSES_INCLUDE_DIR})
 include_directories(${SRC_DIR})
 include_directories(${LIBEVENT_INCLUDE_DIRS})
 
-flex_target(LEXER "${SRC_DIR}/lib/token.l" "${LEXER_OUT}" DEFINES_FILE "${PARSER_DIR}/lex.yy.h")
-bison_target(PARSER "${SRC_DIR}/lib/rn.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/rn.tab.h")
+flex_target(LEXER "${SRC_DIR}/parser/token.l" "${LEXER_OUT}" DEFINES_FILE "${PARSER_DIR}/lex.yy.h")
+bison_target(PARSER "${SRC_DIR}/parser/rn.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/rn.tab.h")
 
 add_flex_bison_dependency(LEXER PARSER)
 

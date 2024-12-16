@@ -22,10 +22,13 @@
 #include "lib.h"
 #include "lex.yy.h"
 #include "rn.tab.h"
-#include "unistd.h"
-#include "fcntl.h"
+#include "constants.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 
-const char *CONFIG_FILE = "config.rn";
+static config *conf = NULL;
+#define app_conf conf
 
 char *read_config_file()
 {
@@ -72,8 +75,20 @@ config *get_cfg()
 	if (result != 0) {
 		log(LogLevel_WARN, "Error parsing runner config, err_code: %d",
 		    result);
+		exit(1);
 	} else {
 		log(LogLevel_INFO, "Parsed config successfully");
 	}
 	return cfg;
+}
+
+config *get_config()
+{
+	return app_conf;
+}
+
+void init_config()
+{
+	config *cfg = get_cfg();
+	app_conf = cfg;
 }

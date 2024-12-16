@@ -16,40 +16,15 @@
  * Public License along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
-#include "ncurses.h"
-#include "constants.h"
-#include "logger.h"
-#include <bits/pthreadtypes.h>
-#include <event2/event_compat.h>
-#include <event2/event.h>
-#include <pthread.h>
+#include "init.h"
 
-void init_ncurses()
-{
-	initscr();
-	raw();
-	keypad(stdscr, TRUE);
-	noecho();
-}
-
-void init_logger()
-{
-	char *log_path = get_data_path("main.log");
-	printf("%s", log_path);
-	logger_initFileLogger(log_path, MAX_LOG_LIMIT, 10);
-}
-
-void *init_event_loop(void *args)
-{
-	event_init();
-	event_loop(EVLOOP_NO_EXIT_ON_EMPTY);
-
-	return 0;
-}
-
+/**
+ * Init sequence of crunner
+ */
 void init()
 {
 	init_logger();
-
-	initscr();
+	init_config();
+	init_event_loop();
+	init_ncurses();
 }

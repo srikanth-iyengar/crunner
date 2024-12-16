@@ -1,6 +1,5 @@
-#ifndef CRUNNER_EVENT_TYPES
+#ifndef EVENT_TYPES_HH
+#define EVENT_TYPES_HH
 
-struct event {
-};
 
-#endif // !CRUNNER_EVENT_TYPES
+#endif  // EVENT_TYPES_HH

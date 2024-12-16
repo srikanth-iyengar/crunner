@@ -1,4 +1,4 @@
-PHONY: compile run checks debug compile
+.PHONY: compile run checks debug compile clean
 
 SHELL := /bin/bash
 CMAKE_PRESENT=$(shell (hash cmake 2>/dev/null 1>/dev/null && echo "YES") || echo "NO")
@@ -33,6 +33,9 @@ run: compile
 
 clean:
 	@rm -rf build
+	@echo "Cleaning following files:"
+	@find . -name '*~'
+	@find . -name '*~' | xargs rm
 
 fmt:
 	@indent ${RULES} ${SOURCE_FILES}

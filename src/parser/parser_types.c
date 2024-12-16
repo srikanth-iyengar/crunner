@@ -18,7 +18,7 @@
  */
 
 #include "parser_types.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -115,6 +115,11 @@ void add_filter(command *cmd, filter f)
 	cmd->filters[cmd->cnt_filter - 1] = f;
 }
 
+/**
+ * This util function takes a cmd and a checkpoint and adds the checkpoint to the command
+ * @cmd command*
+ * @chkpt checkpoint*
+ */
 void add_checkpoint(command *cmd, checkpoint *chkpt)
 {
 	cmd->checkpoints =
