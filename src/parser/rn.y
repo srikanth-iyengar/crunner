@@ -42,6 +42,9 @@ void yyerror(config* cfg, const char *s);
 %token CHECKPOINT
 %token WATCH
 %token SEMICOLON
+%token DEPENDS_ON
+%token ARG_SEPARATOR
+%token PERIOD
 %token <sval> IDENT
 %token <ival> TIMEOUT
 %token <sval> STRING
@@ -93,7 +96,6 @@ cmd_prop: filter {
 				;
 
 filter: FILTER LPAR STRING RPAR SEMICOLON {
-			LOG_DEBUG("REGEX: %s", $3);
 			$$ = create_filter($3);
 			}
 			;
@@ -107,6 +109,14 @@ watch: WATCH LPAR STRING RPAR SEMICOLON {
 		 $$ = create_watch($3);
 		 }
 		 ;
+
+deps: DEPENDS_ON LPAR var_deps RPAR SEMICOLON {
+						
+					}
+					;
+
+var_deps: var_deps ARG_SEPARATOR IDENT PERIOD IDENT |
+				IDENT PERIOD IDENT
 
 %%
 

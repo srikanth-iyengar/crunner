@@ -4,3 +4,4 @@ cmd c1("yarn dev") {
   filter("{regex}3");
   filter("{regex}4");
 }
+

@@ -23,5 +23,4 @@ void init_logger()
 {
 	char *log_path = get_data_path("main.log");
 	int res = logger_initFileLogger(log_path, MAX_LOG_LIMIT, 10);
-	printf("%d", res);
 }

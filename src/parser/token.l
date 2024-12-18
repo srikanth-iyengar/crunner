@@ -16,11 +16,14 @@ cmd								{ return CMD; }
 filter						{ return FILTER; }
 chkpt							{ return CHECKPOINT; }
 watch							{ return WATCH; }
+depends_on				{ return DEPENDS_ON; }
 [{]								{ return LCURLY; }
 [}]								{ return RCURLY; }
 [(]								{ return LPAR; }
 [)]								{ return RPAR; }
 [;]								{ return SEMICOLON; }
+[,]								{ return ARG_SEPARATOR; }
+[.]								{ return PERIOD; }
 [ \t\n]						{}
 [a-zA-Z0-9]+			{
 	yylval.sval = strdup(yytext); 

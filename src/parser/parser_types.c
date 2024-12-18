@@ -68,13 +68,24 @@ filter create_filter(char *regex)
 	for (int i = 0; i <= len; i++) {
 		fltr[i] = regex[i];
 	}
+
 	return fltr;
 }
 
 watch create_watch(char *path)
 {
 	watch wtch = path;
+
 	return wtch;
+}
+
+dependency *create_dependency(char *cmd_ident, char *chkpt_ident)
+{
+	dependency *new_dep = malloc(sizeof(dependency));
+	new_dep->cmd_ident = cmd_ident;
+	new_dep->chkpt_ident = chkpt_ident;
+
+	return new_dep;
 }
 
 cmd_prop *create_cmd_prop(void *value, enum prop_type type)
@@ -89,6 +100,9 @@ cmd_prop *create_cmd_prop(void *value, enum prop_type type)
 		break;
 	case PROP_WATCH:
 		prop->value.watch = (watch) value;
+		break;
+	case PROP_DEPENDENCY:
+		prop->value.deps = (dependency *) value;
 		break;
 	}
 	prop->type = type;
@@ -129,6 +143,30 @@ void add_checkpoint(command *cmd, checkpoint *chkpt)
 }
 
 /**
+ * This util function takes a malloc allocated dependency array and adds a given new dependency to it
+ */
+void add_dependency(dependency *deps, dependency *dep)
+{
+
+}
+
+/**
+ * This util function set the given dependencies of the command
+ * @cmd command*
+ * @deps dependency*
+ */
+void set_dependency(command *cmd, dependency *deps)
+{
+	// if deps is already set free the previously allocated memory
+	if (cmd->deps != NULL) {
+		free(cmd->deps);
+	}
+
+	cmd->deps = malloc(sizeof(dependency));
+	cmd->deps = deps;
+}
+
+/**
  * This function takes a config and a command_prop and appends the prop to the last command present in the config
  * @cfg  config* is the reference to the config
  * @prop cmd_prop is the actual cmd_prop struct
@@ -146,6 +184,8 @@ void add_cmd_prop(config *cfg, cmd_prop *prop)
 	case PROP_FILTER:
 		add_filter(cmd, prop->value.filter);
 		break;
+	case PROP_DEPENDENCY:
+
 	default:
 		break;
 	}

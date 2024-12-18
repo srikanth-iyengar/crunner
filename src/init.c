@@ -19,7 +19,7 @@
 #include "init.h"
 
 /**
- * Init sequence of crunner
+ * Init sequence
  */
 void init()
 {
