@@ -1,7 +1,7 @@
 /**
  * init.h
  *
- * Copyright (C) 2024 Srikanth Iyengar <ksrikanth3012@gmail.com>
+ * Copyright (C) 2024 Srikanth Iyengar <git@srikanthk.in>
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
