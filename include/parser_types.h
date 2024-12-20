@@ -11,6 +11,10 @@ typedef struct __dependency {
 	char *cmd_ident;
 	char *chkpt_ident;
 } dependency;
+typedef struct __dependency_list {
+	dependency **deps;
+	int cnt;
+} dependency_list;
 
 typedef struct command {
 	char *cmd;
@@ -18,12 +22,12 @@ typedef struct command {
 	watch *watch_paths;
 	checkpoint **checkpoints;
 	filter *filters;
-	dependency *deps;
+	dependency_list *dep_list;
 
 	int cnt_watch;
 	int cnt_checkpoint;
 	int cnt_filter;
-	int cnt_deps;
+	/* int cnt_deps; */
 } command;
 
 typedef struct __config {
@@ -39,7 +43,7 @@ typedef struct cmd_prop {
 		checkpoint *chkpt;
 		filter filter;
 		watch watch;
-		dependency *deps;
+		dependency_list *dep_list;
 	} value;
 } cmd_prop;
 

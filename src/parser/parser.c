@@ -27,8 +27,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-static config *conf = NULL;
-#define app_conf conf
+/* static config *conf = NULL; */
+/* #define app_conf conf */
 
 char *read_config_file()
 {
@@ -46,23 +46,6 @@ char *read_config_file()
 	buffer[size] = (char)'\0';
 
 	return buffer;
-}
-
-cmd_prop get_cmd_prop(config *cfg, int param)
-{
-	cmd_prop prop;
-
-	filter f = "asdf";
-
-	switch (param) {
-	case 0:
-		add_cmd_prop(cfg, create_cmd_prop(f, PROP_FILTER));
-		break;
-	case 1:
-		add_cmd_prop(cfg, create_cmd_prop(f, PROP_FILTER));
-		break;
-	}
-	return prop;
 }
 
 config *get_cfg()
@@ -84,11 +67,11 @@ config *get_cfg()
 
 config *get_config()
 {
-	return app_conf;
+	return NULL;
 }
 
 void init_config()
 {
 	config *cfg = get_cfg();
-	app_conf = cfg;
+	/* app_conf = cfg; */
 }

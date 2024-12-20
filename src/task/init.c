@@ -21,18 +21,18 @@
 #include "task_type.h"
 #include <stdlib.h>
 
-extern config *conf;
+/* extern config *conf; */
 
-struct task *initialize()
-{
-	struct task *tasks = NULL;
-	int task_cnt = 0;
-	for (int cmd_cnt = 0; cmd_cnt < conf->size; cmd_cnt++) {
-		struct task *task = malloc(sizeof(struct task));
-		command *command = conf->commands[cmd_cnt];
+/* struct task *initialize() */
+/* { */
+/* 	struct task *tasks = NULL; */
+/* 	int task_cnt = 0; */
+/* 	for (int cmd_cnt = 0; cmd_cnt < conf->size; cmd_cnt++) { */
+/* 		struct task *task = malloc(sizeof(struct task)); */
+/* 		command *command = conf->commands[cmd_cnt]; */
 
-		task->type = COMMAND;
-	}
+/* 		task->type = COMMAND; */
+/* 	} */
 
-	return tasks;
-}
+/* 	return tasks; */
+/* } */

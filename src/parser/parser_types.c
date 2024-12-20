@@ -18,6 +18,7 @@
  */
 
 #include "parser_types.h"
+#include "logger.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -88,6 +89,15 @@ dependency *create_dependency(char *cmd_ident, char *chkpt_ident)
 	return new_dep;
 }
 
+dependency_list *create_dependency_list()
+{
+	dependency_list *dep_list = malloc(sizeof(dependency_list));
+	dep_list->deps = NULL;
+	dep_list->cnt = 0;
+
+	return dep_list;
+}
+
 cmd_prop *create_cmd_prop(void *value, enum prop_type type)
 {
 	cmd_prop *prop = malloc(sizeof(cmd_prop));
@@ -102,7 +112,7 @@ cmd_prop *create_cmd_prop(void *value, enum prop_type type)
 		prop->value.watch = (watch) value;
 		break;
 	case PROP_DEPENDENCY:
-		prop->value.deps = (dependency *) value;
+		prop->value.dep_list = (dependency_list *) value;
 		break;
 	}
 	prop->type = type;
@@ -142,28 +152,25 @@ void add_checkpoint(command *cmd, checkpoint *chkpt)
 	cmd->checkpoints[cmd->cnt_checkpoint - 1] = chkpt;
 }
 
-/**
- * This util function takes a malloc allocated dependency array and adds a given new dependency to it
- */
-void add_dependency(dependency *deps, dependency *dep)
+void set_dependency_list(command *cmd, dependency_list *dep_list)
 {
-
+	cmd->dep_list = dep_list;
 }
 
 /**
- * This util function set the given dependencies of the command
- * @cmd command*
- * @deps dependency*
+ * This util function takes a malloc allocated dependency array and adds a given new dependency to it
  */
-void set_dependency(command *cmd, dependency *deps)
+void add_dependency(dependency_list *dep_list, dependency *dep)
 {
-	// if deps is already set free the previously allocated memory
-	if (cmd->deps != NULL) {
-		free(cmd->deps);
+	dep_list->deps =
+	    realloc(dep_list->deps, ++dep_list->cnt * sizeof(dependency));
+	if (dep_list == NULL) {
+		LOG_ERROR
+		    ("Cannot allocate memory to dependency_list of: %s in heap",
+		     dep_list->cnt * sizeof(dependency));
+		exit(-1);
 	}
-
-	cmd->deps = malloc(sizeof(dependency));
-	cmd->deps = deps;
+	dep_list->deps[dep_list->cnt - 1] = dep;
 }
 
 /**
@@ -185,8 +192,7 @@ void add_cmd_prop(config *cfg, cmd_prop *prop)
 		add_filter(cmd, prop->value.filter);
 		break;
 	case PROP_DEPENDENCY:
-
-	default:
+		set_dependency_list(cmd, prop->value.dep_list);
 		break;
 	}
 }

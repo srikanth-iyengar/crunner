@@ -31,6 +31,8 @@ void yyerror(config* cfg, const char *s);
 	checkpoint* chkpt;
 	command cmd;
 	cmd_prop* prop;
+	dependency_list* dep_list;
+	dependency* dep;
 }
 
 %token CMD
@@ -53,6 +55,9 @@ void yyerror(config* cfg, const char *s);
 %type<w> watch
 %type<chkpt> checkpoint
 %type<prop> cmd_prop
+%type<dep> dep
+%type<dep_list> var_deps
+%type<dep_list> deps
 
 %parse-param {config *cfg}
 
@@ -79,19 +84,24 @@ cmd_props: cmd_props cmd_prop | cmd_prop
 				 ;
 
 cmd_prop: filter {
-				cmd_prop* prop = create_cmd_prop($1, PROP_FILTER);
-				add_cmd_prop(cfg, prop);
-				$$ = prop;
+					cmd_prop* prop = create_cmd_prop($1, PROP_FILTER);
+					add_cmd_prop(cfg, prop);
+					$$ = prop;
 				}
 				| checkpoint {
-				cmd_prop* prop = create_cmd_prop($1, PROP_CHECKPOINT);
-				add_cmd_prop(cfg, prop);
-				$$ = prop;
+					cmd_prop* prop = create_cmd_prop($1, PROP_CHECKPOINT);
+					add_cmd_prop(cfg, prop);
+					$$ = prop;
 				}
-				| watch{
-				cmd_prop* prop = create_cmd_prop($1, PROP_WATCH);
-				add_cmd_prop(cfg, prop);
-				$$ = prop;
+				| watch {
+					cmd_prop* prop = create_cmd_prop($1, PROP_WATCH);
+					add_cmd_prop(cfg, prop);
+					$$ = prop;
+				}
+				| deps {
+					cmd_prop* prop = create_cmd_prop($1, PROP_DEPENDENCY);
+					add_cmd_prop(cfg, prop);
+					$$ = prop;
 				}
 				;
 
@@ -111,13 +121,22 @@ watch: WATCH LPAR STRING RPAR SEMICOLON {
 		 ;
 
 deps: DEPENDS_ON LPAR var_deps RPAR SEMICOLON {
-						
+						$$ = $3;
 					}
 					;
 
-var_deps: var_deps ARG_SEPARATOR IDENT PERIOD IDENT |
-				IDENT PERIOD IDENT
+var_deps: var_deps ARG_SEPARATOR dep {
+					add_dependency($1, $3);
+					$$ = $1;
+				} | dep {
+					dependency_list* dep_list = create_dependency_list();
+					add_dependency(dep_list, $1);
+					$$ = dep_list;
+				}
 
+dep: IDENT PERIOD IDENT {
+		$$ = create_dependency($1, $3);
+	 }
 %%
 
 void yyerror(config* cfg, const char* s) {

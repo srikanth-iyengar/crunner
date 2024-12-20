@@ -3,5 +3,13 @@ cmd c1("yarn dev") {
   filter("{regex}2");
   filter("{regex}3");
   filter("{regex}4");
+
+	chkpt chk2("curl localhost:8080");
+}
+
+cmd c2("hi") {
+	filter("{regex}");
+	
+	depends_on(c1.chk2);
 }
 
