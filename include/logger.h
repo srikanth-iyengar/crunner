@@ -6,16 +6,16 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif /* __cplusplus */
+#endif				/* __cplusplus */
 
 #include <stdio.h>
 #include <string.h>
 
 #if defined(_WIN32) || defined(_WIN64)
- #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 #else
- #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
-#endif /* defined(_WIN32) || defined(_WIN64) */
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#endif				/* defined(_WIN32) || defined(_WIN64) */
 
 #define LOG_TRACE(fmt, ...) logger_log(LogLevel_TRACE, __FILENAME__, __LINE__, fmt, ##__VA_ARGS__)
 #define LOG_DEBUG(fmt, ...) logger_log(LogLevel_DEBUG, __FILENAME__, __LINE__, fmt, ##__VA_ARGS__)
@@ -24,14 +24,14 @@ extern "C" {
 #define LOG_ERROR(fmt, ...) logger_log(LogLevel_ERROR, __FILENAME__, __LINE__, fmt, ##__VA_ARGS__)
 #define LOG_FATAL(fmt, ...) logger_log(LogLevel_FATAL, __FILENAME__, __LINE__, fmt, ##__VA_ARGS__)
 
-typedef enum {
-    LogLevel_TRACE,
-    LogLevel_DEBUG,
-    LogLevel_INFO,
-    LogLevel_WARN,
-    LogLevel_ERROR,
-    LogLevel_FATAL,
-} LogLevel;
+	typedef enum {
+		LogLevel_TRACE,
+		LogLevel_DEBUG,
+		LogLevel_INFO,
+		LogLevel_WARN,
+		LogLevel_ERROR,
+		LogLevel_FATAL,
+	} LogLevel;
 
 /**
  * Initialize the logger as a console logger.
@@ -40,7 +40,7 @@ typedef enum {
  * @param[in] output A file pointer. Make sure to set stdout or stderr.
  * @return Non-zero value upon success or 0 on error
  */
-int logger_initConsoleLogger(FILE* output);
+	int logger_initConsoleLogger(FILE * output);
 
 /**
  * @brief 
@@ -49,7 +49,7 @@ int logger_initConsoleLogger(FILE* output);
  * 
  * @return int 
  */
-void logger_exitFileLogger();
+	void logger_exitFileLogger();
 
 /**
  * Initialize the logger as a file logger.
@@ -60,7 +60,8 @@ void logger_exitFileLogger();
  * @param[in] maxBackupFiles The maximum number of files for backup
  * @return Non-zero value upon success or 0 on error
  */
-int logger_initFileLogger(const char* filename, long maxFileSize, unsigned char maxBackupFiles);
+	int logger_initFileLogger(const char *filename, long maxFileSize,
+				  unsigned char maxBackupFiles);
 
 /**
  * Set the log level.
@@ -69,7 +70,7 @@ int logger_initFileLogger(const char* filename, long maxFileSize, unsigned char 
  *
  * @param[in] level A log level
  */
-void logger_setLevel(LogLevel level);
+	void logger_setLevel(LogLevel level);
 
 /**
  * Get the log level that has been set.
@@ -77,14 +78,14 @@ void logger_setLevel(LogLevel level);
  *
  * @return The log level
  */
-LogLevel logger_getLevel(void);
+	LogLevel logger_getLevel(void);
 
 /**
  * Check if a message of the level would actually be logged.
  *
  * @return Non-zero value if the log level is enabled
  */
-int logger_isEnabled(LogLevel level);
+	int logger_isEnabled(LogLevel level);
 
 /**
  * Flush automatically.
@@ -92,12 +93,12 @@ int logger_isEnabled(LogLevel level);
  *
  * @param[in] interval A fulsh interval in milliseconds. Switch off if 0 or a negative integer.
  */
-void logger_autoFlush(long interval);
+	void logger_autoFlush(long interval);
 
 /**
  * Flush buffered log messages.
  */
-void logger_flush(void);
+	void logger_flush(void);
 
 /**
  * Log a message.
@@ -111,10 +112,10 @@ void logger_flush(void);
  * @param[in] fmt A format string
  * @param[in] ... Additional arguments
  */
-void logger_log(LogLevel level, const char* file, int line, const char* fmt, ...);
+	void logger_log(LogLevel level, const char *file, int line,
+			const char *fmt, ...);
 
 #ifdef __cplusplus
-} /* extern "C" */
-#endif /* __cplusplus */
-
-#endif /* LOGGER_H */
+}				/* extern "C" */
+#endif				/* __cplusplus */
+#endif				/* LOGGER_H */

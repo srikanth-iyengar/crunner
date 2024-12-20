@@ -1,7 +1,7 @@
 /**
- * constants.h
+ * main_loop.c
  *
- * Copyright (C) 2024 Srikanth Iyengar <ksrikanth3012@gmail.com>
+ * Copyright (C) 2024 Srikanth Iyengar <git@srikanthk.in>
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,13 +17,6 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
-
-#define CONFIG_FILE "config.rn"
-
-char *get_data_path(char *path);
-
-#define MAX_LOG_LIMIT 100 * 1024 * 1024
-
-#endif				// !CONSTANTS_H
+void x_event_loop()
+{
+}

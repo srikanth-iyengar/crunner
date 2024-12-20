@@ -18,11 +18,15 @@
  */
 
 #include "init.h"
+#include "crunner.h"
 
 int main(int argc, char **argv)
 {
 	// call init sequence
 	init();
+
+	// validate conf
+	x_event_loop();
 
 	return 0;
 }

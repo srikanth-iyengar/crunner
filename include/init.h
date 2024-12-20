@@ -26,4 +26,4 @@ void init_config();
 void init_ncurses();
 void init_event_loop();
 
-#endif // !CRUNNER_INIT_H
+#endif				// !CRUNNER_INIT_H

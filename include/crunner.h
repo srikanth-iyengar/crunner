@@ -1,19 +1,24 @@
+/**
+ * crunner.h
+ *
+ * Copyright (C) 2024 Srikanth Iyengar <git@srikanthk.in>
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General
+ * Public License along with this program. If not, see
+ * <https://www.gnu.org/licenses/>.
+ */
 #ifndef CRUNNER_H
 #define CRUNNER_H
 
-enum proc_status {
-	RUNNING,
-	EXIT,
-	NOT_STARTED,
-	ERROR
-};
+void x_event_loop();
 
-struct crunner_proc {
-	char* name;
-	enum proc_status status;
-	int start_timestamp;
-};
-
-void* proc_loop(struct crunner_proc *proc);
-
-#endif // !CRUNNER_H
+#endif				// !CRUNNER_H

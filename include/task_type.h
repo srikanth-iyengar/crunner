@@ -1,5 +1,5 @@
 /**
- * event_types.h
+ * task_type.h
  *
  * Copyright (C) 2024 Srikanth Iyengar <git@srikanthk.in>
  *
@@ -16,35 +16,47 @@
  * Public License along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
-#ifndef EVENT_TYPES_HH
-#define EVENT_TYPES_HH
+#ifndef TASK_TYPE_HH
+#define TASK_TYPE_HH
 
-#include "task_type.h"
+#include <stddef.h>
+typedef char *identifier;
 
-enum event_type {
-	/* Event when crunner initialization steps are complete */
-	INIT,
-	/* Event whenever a task status gets updated */
-	TASK_UPDATE,
-	/* Event to restart a task based on checkpoint or file change based invocation */
-	TASK_RESTART,
+enum task_status {
+	RUNNING = 1,
+	WAITING = 2,
+	FAILED = 4,
+	SUCCESS = 8,
 };
 
-struct event_task_update {
-	identifier task_ident;
-	int exit_code;
-	enum task_status status;
+enum task_type {
+	COMMAND = 1,
+	FS_WATCH = 2,
 };
 
-struct event_task_restart {
-	identifier task_ident;
+struct cmd_task_info {
+	char *cmd;
 };
 
-struct x_event {
-	enum event_type x_type;
+struct fs_watch_task_info {
+	char **file_paths;
+};
+
+struct task {
+	identifier ident;
+	enum task_type type;
 	union {
-		struct event_task_update task_update;
-	} x_data;
+		struct cmd_task_info cmd_info;
+		struct fs_watch_task_info watch_info;
+	} task_info;
+
+	enum task_status status;
+	int restart_on_failure;
+	identifier *dependent_task_ids;
+	int exit_code;
+	int restart_cnt;
+	size_t started_at;
+	size_t pid;
 };
 
-#endif				// EVENT_TYPES_HH
+#endif				// TASK_TYPE_HH
