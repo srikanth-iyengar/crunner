@@ -21,10 +21,12 @@
 #include "parser_types.h"
 #include "task_type.h"
 #include <stdlib.h>
+#include <string.h>
 
 extern config *conf;
 
-task **prepare_checkpoint_tasks(checkpoint **chkpts, int chkpt_cnt)
+task **prepare_checkpoint_tasks(checkpoint **chkpts, int chkpt_cnt,
+				char *prefix)
 {
 	task **tasks = NULL;
 
@@ -33,7 +35,12 @@ task **prepare_checkpoint_tasks(checkpoint **chkpts, int chkpt_cnt)
 	for (int idx = 0; idx < chkpt_cnt; idx++) {
 		task *tsk = create_task();
 		checkpoint *chkpt = chkpts[idx];
-		tsk->ident = chkpt->ident;
+		char *ident = strdup(prefix);
+
+		strcat(ident, ".");
+		strcat(ident, chkpt->value);
+
+		tsk->ident = ident;
 		tsk->type = COMMAND;
 		tsk->restart_on_failure = 1;
 
@@ -58,7 +65,7 @@ task **initialize_tasks()
 
 	for (int cmd_cnt = 0; cmd_cnt < conf->size; cmd_cnt++) {
 		task **chkpt_tsks = NULL;
-		task *task = malloc(sizeof(struct __task));
+		task *task = create_task();
 		command *command = conf->commands[cmd_cnt];
 
 		task->type = COMMAND;
@@ -69,7 +76,8 @@ task **initialize_tasks()
 		task->task_info.cmd_info = task_info;
 
 		chkpt_tsks = prepare_checkpoint_tasks(command->checkpoints,
-						      command->cnt_checkpoint);
+						      command->cnt_checkpoint,
+						      command->ident);
 
 		int ptr = 0;
 		while (chkpt_tsks[ptr] != NULL) {
@@ -82,6 +90,9 @@ task **initialize_tasks()
 		tasks[++idx] = task;
 	}
 	LOG_INFO("Number of tasks to be scheduled: %d", idx + 1);
+
+	tasks = realloc(tasks, (idx + 1) * sizeof(struct __task));
+	tasks[++idx] = NULL;
 
 	return tasks;
 }
