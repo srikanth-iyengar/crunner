@@ -27,8 +27,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-/* static config *conf = NULL; */
-/* #define app_conf conf */
+config *conf = NULL;
+#define app_conf conf
 
 char *read_config_file()
 {
@@ -73,5 +73,6 @@ config *get_config()
 void init_config()
 {
 	config *cfg = get_cfg();
-	/* app_conf = cfg; */
+	cfg->size--;
+	app_conf = cfg;
 }

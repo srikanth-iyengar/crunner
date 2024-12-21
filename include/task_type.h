@@ -16,47 +16,52 @@
  * Public License along with this program. If not, see
  * <https://www.gnu.org/licenses/>.
  */
+
 #ifndef TASK_TYPE_HH
 #define TASK_TYPE_HH
 
 #include <stddef.h>
+
 typedef char *identifier;
 
-enum task_status {
+typedef enum __task_status {
 	RUNNING = 1,
 	WAITING = 2,
 	FAILED = 4,
 	SUCCESS = 8,
-};
+} task_status;
 
-enum task_type {
+typedef enum __task_type {
 	COMMAND = 1,
 	FS_WATCH = 2,
-};
+} task_type;
 
-struct cmd_task_info {
+typedef struct __cmd_task_info {
 	char *cmd;
-};
+} cmd_task_info;
 
-struct fs_watch_task_info {
+typedef struct __fs_watch_task_info {
 	char **file_paths;
-};
+} fs_watch_task_info;
 
-struct task {
+typedef struct __task {
 	identifier ident;
-	enum task_type type;
+	task_type type;
 	union {
-		struct cmd_task_info cmd_info;
-		struct fs_watch_task_info watch_info;
+		cmd_task_info cmd_info;
+		fs_watch_task_info watch_info;
 	} task_info;
 
-	enum task_status status;
+	task_status status;
 	int restart_on_failure;
-	identifier *dependent_task_ids;
+	struct __task **dep_tasks;
 	int exit_code;
 	int restart_cnt;
 	size_t started_at;
 	size_t pid;
-};
+} task;
+
+task *create_task();
+task **initialize_tasks();
 
 #endif				// TASK_TYPE_HH

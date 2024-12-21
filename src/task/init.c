@@ -17,22 +17,71 @@
  * <https://www.gnu.org/licenses/>.
  */
 
+#include "logger.h"
 #include "parser_types.h"
 #include "task_type.h"
 #include <stdlib.h>
 
-/* extern config *conf; */
+extern config *conf;
 
-/* struct task *initialize() */
-/* { */
-/* 	struct task *tasks = NULL; */
-/* 	int task_cnt = 0; */
-/* 	for (int cmd_cnt = 0; cmd_cnt < conf->size; cmd_cnt++) { */
-/* 		struct task *task = malloc(sizeof(struct task)); */
-/* 		command *command = conf->commands[cmd_cnt]; */
+task **prepare_checkpoint_tasks(checkpoint **chkpts, int chkpt_cnt)
+{
+	task **tasks = NULL;
 
-/* 		task->type = COMMAND; */
-/* 	} */
+	tasks = (task **) reallocarray(tasks, chkpt_cnt + 1, sizeof(task));
 
-/* 	return tasks; */
-/* } */
+	for (int idx = 0; idx < chkpt_cnt; idx++) {
+		task *tsk = create_task();
+		checkpoint *chkpt = chkpts[idx];
+		tsk->ident = chkpt->ident;
+		tsk->type = COMMAND;
+		tsk->restart_on_failure = 1;
+
+		cmd_task_info task_info = {
+			.cmd = chkpt->value
+		};
+		tsk->task_info.cmd_info = task_info;
+		tasks[idx] = tsk;
+	}
+	tasks[chkpt_cnt] = NULL;
+
+	return tasks;
+}
+
+task **initialize_tasks()
+{
+	task **tasks = NULL;
+
+	int task_cnt = 0;
+	int idx = -1;
+	LOG_INFO("Number of commands : %d", conf->size);
+
+	for (int cmd_cnt = 0; cmd_cnt < conf->size; cmd_cnt++) {
+		task **chkpt_tsks = NULL;
+		task *task = malloc(sizeof(struct __task));
+		command *command = conf->commands[cmd_cnt];
+
+		task->type = COMMAND;
+		cmd_task_info task_info = {
+			.cmd = command->cmd
+		};
+		task->ident = command->ident;
+		task->task_info.cmd_info = task_info;
+
+		chkpt_tsks = prepare_checkpoint_tasks(command->checkpoints,
+						      command->cnt_checkpoint);
+
+		int ptr = 0;
+		while (chkpt_tsks[ptr] != NULL) {
+			tasks =
+			    realloc(tasks, (idx + 1) * sizeof(struct __task));
+			tasks[++idx] = chkpt_tsks[ptr++];
+		}
+
+		tasks = realloc(tasks, sizeof(struct __task));
+		tasks[++idx] = task;
+	}
+	LOG_INFO("Number of tasks to be scheduled: %d", idx + 1);
+
+	return tasks;
+}

@@ -1,5 +1,5 @@
 /**
- * main.c
+ * task_type.c
  *
  * Copyright (C) 2024 Srikanth Iyengar <git@srikanthk.in>
  *
@@ -17,19 +17,16 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#include "init.h"
 #include "task_type.h"
-#include "crunner.h"
+#include <stdlib.h>
 
-int main(int argc, char **argv)
+task *create_task()
 {
-	// call init sequence
-	init();
-
-	initialize_tasks();
-
-	// validate conf
-	x_event_loop();
-
-	return 0;
+	task *task = malloc(sizeof(struct __task));
+	task->status = WAITING;
+	task->pid = -1;
+	task->dep_tasks = NULL;
+	task->restart_cnt = 0;
+	task->started_at = 0;
+	return task;
 }
